@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Build a free keyboard-learning app that lets users pick any YouTube song and learn via a falling top-to-bottom piano-roll, providing real-time tick-mark feedback when the correct keyboard key is pressed, and only asking the user for their name (no other questions).",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Minimalist piano/keyboard app logo (app-logo.dim_512x512.png)\n- Abstract music practice background with subtle falling-note motif (practice-bg.dim_1920x1080.png)",
+  "existing_features": [
+    {
+      "id": "feature-implement-minimal-onboarding-that-asks-only-for-the-user-s-name-single-required-field-and-then-takes-the-user-directly-to-the-practice-experience-without-asking-any-other-questions-or-showing-any-surveys-quizzes",
+      "title": "Implement minimal onboarding that asks only for the user's name (single required field) and then takes the user directly to the practice experience without asking any other questions or showing any surveys/quizzes.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-youtube-song-selection-screen-that-allows-the-user-to-paste-a-youtube-video-url-and-play-it-in-app-using-an-embedded-youtube-player",
+      "title": "Add a YouTube song selection screen that allows the user to paste a YouTube video URL and play it in-app using an embedded YouTube player.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-note-sequence-source-for-the-piano-roll-that-can-be-used-with-the-selected-youtube-song-without-requiring-the-app-to-extract-notes-directly-from-youtube-audio-support-importing-a-corresponding-midi-file-or-a-simple-json-note-chart-and-syncing-the-falling-piano-roll-to-that-note-data-while-the-youtube-video-plays-for-reference",
+      "title": "Provide a note-sequence source for the piano-roll that can be used with the selected YouTube song without requiring the app to extract notes directly from YouTube audio. Support importing a corresponding MIDI file (or a simple JSON note chart) and syncing the falling piano-roll to that note data while the YouTube video plays for reference.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-falling-piano-roll-visualization-top-to-bottom-synced-to-the-loaded-note-chart-timeline-with-lanes-columns-representing-keys-and-notes-moving-downward-toward-a-hit-line-target-zone",
+      "title": "Implement a falling piano-roll visualization (top-to-bottom) synced to the loaded note chart timeline, with lanes/columns representing keys and notes moving downward toward a hit line/target zone.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-detect-the-user-s-physical-computer-keyboard-key-presses-during-practice-map-them-to-the-corresponding-piano-roll-lanes-keys-and-show-an-immediate-tick-check-mark-in-the-ui-when-the-pressed-key-matches-the-current-expected-note-at-the-hit-line-within-an-allowed-timing-window",
+      "title": "Detect the user's physical computer keyboard key presses during practice, map them to the corresponding piano-roll lanes/keys, and show an immediate tick/check mark in the UI when the pressed key matches the current expected note at the hit line within an allowed timing window.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-the-user-s-name-and-optionally-their-most-recent-practice-configuration-like-last-youtube-url-and-last-imported-chart-filename-in-the-internet-computer-backend-canister-so-it-is-available-when-the-user-returns-without-collecting-any-other-personal-data",
+      "title": "Persist the user's name (and optionally their most recent practice configuration like last YouTube URL and last imported chart filename) in the Internet Computer backend canister so it is available when the user returns, without collecting any other personal data.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-app-is-free-to-use-by-not-implementing-any-paid-access-subscriptions-payments-or-paywalls",
+      "title": "Ensure the app is free to use by not implementing any paid access, subscriptions, payments, or paywalls.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-visual-theme-across-the-app-colors-typography-spacing-and-components-suitable-for-a-music-learning-tool-distinct-and-consistent-avoid-blue-purple-as-primary-colors",
+      "title": "Apply a coherent visual theme across the app (colors, typography, spacing, and components) suitable for a music-learning tool, distinct and consistent (avoid blue/purple as primary colors).",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Allow user to choose any song from YouTube as the learning source",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Display a falling piano-roll (top-to-bottom) visualization of notes/tunes synced to the chosen song",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Detect user key presses and mark correct notes with a tick/check in real time",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Minimal onboarding: ask only for the user's name and do not ask any other questions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Ensure the app is free to use (no paid access required)",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "YouTube-based keyboard learning app with falling piano roll and real-time key feedback",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

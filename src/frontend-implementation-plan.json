@@ -1,0 +1,259 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "YouTube keyboard practice app (frontend) with onboarding, chart import, falling piano roll, and key feedback",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Minimal onboarding that asks only for the user’s name and immediately starts the practice flow (no extra questions).",
+      "acceptanceCriteria": [
+        "On first app load (new session), the only required user input is a name field and a continue/start button.",
+        "After the user enters a name, the app does not present any additional questions (no questionnaires, quizzes, or multi-step onboarding).",
+        "User-facing text is in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the top-level app flow controller (auth gate → name onboarding when needed → practice experience). Ensure onboarding is single-step (name + continue) and transitions directly into practice without any extra prompts."
+        },
+        {
+          "path": "frontend/src/components/auth/AuthGate.tsx",
+          "operation": "create",
+          "description": "Add an authentication gate that requires Internet Identity login before loading/saving any profile data, consistent with the selected \"authorization\" component guidance. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/profile/NameOnboarding.tsx",
+          "operation": "create",
+          "description": "Implement a minimal name-only onboarding UI (single required field + continue). Use shadcn-ui Input/Button/Card for consistent UI primitives. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "create",
+          "description": "Create a simple layout wrapper shared by onboarding, song selection, and practice views to keep spacing/typography consistent (theme coherence) and to display the app logo and basic navigation (e.g., Change name / Logout)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "YouTube song selection input that embeds and plays a YouTube video inside the app.",
+      "acceptanceCriteria": [
+        "There is a clearly labeled input to paste a YouTube URL and a control to load/play it.",
+        "The YouTube video plays within the app UI after a valid URL is provided.",
+        "If the URL is invalid or cannot be loaded, the app shows a clear English error message and does not crash."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/youtube/YouTubePicker.tsx",
+          "operation": "create",
+          "description": "Create a YouTube URL input + Load/Play control, validate supported URL formats, and surface clear English error states. Use shadcn-ui Input/Button/Alert (or similar) for consistent messaging. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/youtube/YouTubeEmbed.tsx",
+          "operation": "create",
+          "description": "Implement an embedded YouTube player using an iframe with a derived videoId and safe embed URL construction; expose play/pause state hooks for the practice view to reference."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "create",
+          "description": "Compose the YouTube picker/embed into the practice experience so the user can load/play the YouTube reference video in-app."
+        },
+        {
+          "path": "frontend/src/utils/youtube.ts",
+          "operation": "create",
+          "description": "Add utility helpers to parse/validate YouTube URLs, extract videoId, and produce user-friendly validation errors (English)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Support importing a MIDI/JSON note chart and syncing practice timing to that chart while YouTube plays for reference (no audio extraction).",
+      "acceptanceCriteria": [
+        "The app allows the user to load a note chart via file import (MIDI and/or JSON) from the song selection/practice flow without introducing additional 'questions' beyond the name.",
+        "Once a note chart is loaded, the app can start a timed practice session that scrolls notes from top to bottom (falling piano roll).",
+        "If no note chart is loaded, the app clearly indicates that a chart is needed for the piano-roll visualization (English), while still allowing YouTube playback."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/package.json",
+          "operation": "modify",
+          "description": "Add a lightweight MIDI parsing dependency (e.g., @tonejs/midi) and any required typings so the app can import MIDI files client-side (no backend involvement)."
+        },
+        {
+          "path": "frontend/src/components/chart/ChartImporter.tsx",
+          "operation": "create",
+          "description": "Implement file import UI supporting JSON (and MIDI if dependency is added) without adding any onboarding steps beyond name. Show clear English status/errors and allow YouTube playback even when no chart is loaded. Use shadcn-ui components for inputs/buttons. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/types/noteChart.ts",
+          "operation": "create",
+          "description": "Define a minimal internal NoteChart model (normalized notes with pitch/lane, start time, duration) used by the piano-roll and scoring logic."
+        },
+        {
+          "path": "frontend/src/utils/chartParsers.ts",
+          "operation": "create",
+          "description": "Implement parsers to load/validate JSON charts and MIDI charts into the internal NoteChart model; ensure robust error handling with English messages."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "modify",
+          "description": "Wire the chart importer into the practice flow; when no chart is loaded, render an English message indicating a chart is required for the piano-roll while still rendering the YouTube player."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Falling piano-roll visualization synced to the loaded note chart with start/pause/stop controls.",
+      "acceptanceCriteria": [
+        "Notes visibly travel from the top of the roll down toward a target line at a steady frame rate.",
+        "The roll layout is readable (distinct note blocks, lanes, and a hit line).",
+        "Start/pause/stop controls affect the piano-roll playback timing."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/pianoroll/PianoRoll.tsx",
+          "operation": "create",
+          "description": "Implement a top-to-bottom falling piano-roll visualization (e.g., canvas or positioned divs) that renders lanes/columns and note blocks synced to the chart timeline, including a visible hit line/target zone."
+        },
+        {
+          "path": "frontend/src/hooks/usePracticeTransport.ts",
+          "operation": "create",
+          "description": "Add a small transport hook to manage practice time (start/pause/stop, elapsed time, requestAnimationFrame ticking) and provide a single source of timing truth for both the piano-roll and hit detection."
+        },
+        {
+          "path": "frontend/src/components/pianoroll/TransportControls.tsx",
+          "operation": "create",
+          "description": "Create Start/Pause/Stop controls (shadcn-ui Button) that drive the practice transport and therefore the piano-roll playback timing. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "modify",
+          "description": "Wire PianoRoll + TransportControls into the practice view so the visualization is always driven by the transport and reflects play/pause/stop state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Keyboard keypress detection mapped to lanes with immediate tick/check feedback when timing matches expected notes near the hit line.",
+      "acceptanceCriteria": [
+        "During practice, the app listens to keydown events and maps them to defined practice keys (documented in the UI, in English).",
+        "When the correct key is pressed for an active note near the hit line (within a defined timing tolerance), a visible tick/check mark appears and the note is marked as hit.",
+        "Incorrect keys do not produce a tick/check mark and are visually indicated as incorrect or ignored (consistent behavior, no crashes)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useKeyboardInput.ts",
+          "operation": "create",
+          "description": "Implement a hook to listen to keydown/keyup, map physical keyboard keys to practice lanes (e.g., A,S,D,F... mapping), and expose last-pressed info to the practice session."
+        },
+        {
+          "path": "frontend/src/features/practice/useHitDetection.ts",
+          "operation": "create",
+          "description": "Implement hit detection logic that checks pressed keys against notes near the hit line using a defined timing tolerance window; mark notes as hit/missed and provide UI feedback state."
+        },
+        {
+          "path": "frontend/src/components/feedback/HitFeedback.tsx",
+          "operation": "create",
+          "description": "Render immediate visible tick/check feedback for correct hits and a consistent incorrect/ignored indication for wrong keys; include an English legend describing the keyboard mapping and timing window."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "modify",
+          "description": "Wire keyboard input + hit detection into the practice view and connect results to PianoRoll note rendering (hit states) and HitFeedback tick/check UI."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Load and save the user profile (name + optional last YouTube URL and last chart filename) via the backend canister so it persists across returns.",
+      "acceptanceCriteria": [
+        "Backend exposes methods to save and load the user's profile containing at least the name.",
+        "Frontend loads the saved name on app start and does not ask for it again if already saved (unless the user explicitly chooses to change it).",
+        "No other personal fields (email, age, phone, etc.) are required or requested."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Create React Query hooks to load/save the current caller profile using the existing actor (getCallerUserProfile/saveCallerUserProfile). Follow the selected \"authorization\" component guidance to avoid profile setup UI flashing. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/profile/NameOnboarding.tsx",
+          "operation": "modify",
+          "description": "On continue, save the profile containing only name (and optionally practiceConfig) using the profile hook; do not request any other personal fields. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "modify",
+          "description": "When the user loads a YouTube URL or imports a chart, optionally persist practiceConfig (lastYoutubeUrl, lastChartFilename) via the user profile save hook; restore these values on load when available."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "modify",
+          "description": "Add an explicit \"Change name\" action that lets the user re-open the name onboarding intentionally (without introducing extra onboarding steps) and ensures the app otherwise reuses the saved name."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Keep the app free to use with no payments, subscriptions, pricing, or paywalls.",
+      "acceptanceCriteria": [
+        "There are no payment flows, pricing pages, subscription gates, or disabled features requiring payment.",
+        "All core features (name entry, YouTube selection, chart import, piano roll, key feedback) are accessible without any payment."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure the core experience is always accessible after login/name setup with no pricing UI, paywalls, or disabled features due to payment."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "modify",
+          "description": "Confirm navigation and header/footer contain no pricing/subscription calls-to-action; keep user-facing text in English and focused on practice."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Apply a consistent music-learning visual theme (not blue/purple primary) across onboarding, selection, and practice.",
+      "acceptanceCriteria": [
+        "UI has a consistent theme across screens (onboarding, YouTube selection, practice).",
+        "Primary color palette is not blue/purple-dominant.",
+        "Typography and spacing feel intentional and consistent."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "create",
+          "description": "Add global theme tokens (CSS variables) and base styles consistent with shadcn-ui/Tailwind usage; choose a non-blue/purple primary palette (e.g., warm amber/green) and set consistent typography/spacing defaults."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Extend theme where needed for the app’s palette and background styling (non-blue/purple primary), ensuring consistent utility usage across views."
+        },
+        {
+          "path": "frontend/public/assets/generated/app-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated app logo asset at frontend/public/assets/generated/app-logo.dim_512x512.png and reference it from the shared layout/header."
+        },
+        {
+          "path": "frontend/public/assets/generated/practice-bg.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated practice background asset at frontend/public/assets/generated/practice-bg.dim_1920x1080.png and use it as a static background in the practice view/layout."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "modify",
+          "description": "Wire in the generated logo (frontend/public/assets/generated/app-logo.dim_512x512.png) and apply consistent layout styling across screens using the new theme tokens."
+        },
+        {
+          "path": "frontend/src/features/practice/PracticeView.tsx",
+          "operation": "modify",
+          "description": "Apply the generated practice background (frontend/public/assets/generated/practice-bg.dim_1920x1080.png) and ensure the piano roll and controls remain readable with consistent spacing and typography."
+        }
+      ]
+    }
+  ]
+}

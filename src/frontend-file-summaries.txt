@@ -1,0 +1,21 @@
+{
+  "frontend/src/index.css": "Global styles with warm amber/orange OKLCH color theme for music learning, custom scrollbar, and animation keyframes for note falling and hit feedback.",
+  "frontend/tailwind.config.js": "Tailwind configuration extending the theme with amber/orange color palette, custom fonts, success colors, and animations for the piano roll.",
+  "frontend/src/App.tsx": "Main application component managing authentication flow, profile onboarding, and rendering the practice view within the app shell.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for fetching and saving user profiles with proper actor dependency handling and cache invalidation.",
+  "frontend/src/components/layout/AppShell.tsx": "Application shell providing header with logo/navigation, user dropdown menu, footer with attribution, and name change dialog.",
+  "frontend/src/components/profile/NameOnboarding.tsx": "Single-step onboarding component that collects only the user's name and saves it to the backend profile.",
+  "frontend/src/features/practice/PracticeView.tsx": "Main practice screen composing YouTube picker, chart importer, video embed, piano roll, transport controls, and hit feedback with state persistence.",
+  "frontend/src/components/youtube/YouTubePicker.tsx": "YouTube URL input component with validation, video ID extraction, and error handling for loading songs.",
+  "frontend/src/components/youtube/YouTubeEmbed.tsx": "Embedded YouTube player component rendering an iframe with the selected video for reference playback.",
+  "frontend/src/utils/youtube.ts": "Utility functions for validating YouTube URLs and extracting video IDs from various YouTube URL formats.",
+  "frontend/src/components/chart/ChartImporter.tsx": "File import component supporting JSON and MIDI chart formats with validation and user feedback.",
+  "frontend/src/types/noteChart.ts": "TypeScript interfaces defining the note chart data structure with notes, duration, and lane information.",
+  "frontend/src/utils/chartParsers.ts": "Parser functions for converting JSON and MIDI files into the internal NoteChart format with error handling.",
+  "frontend/src/hooks/usePracticeTransport.ts": "Custom hook managing practice session timing with start/pause/stop controls and requestAnimationFrame-based time tracking, with proper undefined handling for animation frame ref.",
+  "frontend/src/components/pianoroll/TransportControls.tsx": "Transport control buttons (play/pause/stop) with time display for managing practice session playback.",
+  "frontend/src/hooks/useKeyboardInput.ts": "Custom hook listening to keyboard events and mapping physical keys (A,S,D,F,J,K,L,;) to piano roll lanes.",
+  "frontend/src/features/practice/useHitDetection.ts": "Hook detecting when pressed keys match notes within the timing window and tracking hit/miss state.",
+  "frontend/src/components/feedback/HitFeedback.tsx": "Visual feedback component displaying keyboard mapping instructions and animated hit/miss indicators with checkmarks.",
+  "frontend/src/components/pianoroll/PianoRoll.tsx": "Canvas-based falling piano roll visualization rendering notes scrolling downward with lanes, hit line, and key labels."
+}

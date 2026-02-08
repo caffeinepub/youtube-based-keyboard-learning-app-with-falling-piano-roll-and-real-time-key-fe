@@ -1,0 +1,176 @@
+{
+  "kind": "build_request",
+  "title": "YouTube-based keyboard learning app with falling piano roll and real-time key feedback",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Implement minimal onboarding that asks only for the user's name (single required field) and then takes the user directly to the practice experience without asking any other questions or showing any surveys/quizzes.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "It should ask only the name of the person who is using this app.",
+          "it should not let me to ask any question in it."
+        ]
+      },
+      "acceptanceCriteria": [
+        "On first app load (new session), the only required user input is a name field and a continue/start button.",
+        "After the user enters a name, the app does not present any additional questions (no questionnaires, quizzes, or multi-step onboarding).",
+        "User-facing text is in English."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add a YouTube song selection screen that allows the user to paste a YouTube video URL and play it in-app using an embedded YouTube player.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "When the app lets me to choose any song from YouTube"
+        ]
+      },
+      "acceptanceCriteria": [
+        "There is a clearly labeled input to paste a YouTube URL and a control to load/play it.",
+        "The YouTube video plays within the app UI after a valid URL is provided.",
+        "If the URL is invalid or cannot be loaded, the app shows a clear English error message and does not crash."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Provide a note-sequence source for the piano-roll that can be used with the selected YouTube song without requiring the app to extract notes directly from YouTube audio. Support importing a corresponding MIDI file (or a simple JSON note chart) and syncing the falling piano-roll to that note data while the YouTube video plays for reference.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "it should piano roll from up to down like it is coming up to down the tunes."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The app allows the user to load a note chart via file import (MIDI and/or JSON) from the song selection/practice flow without introducing additional 'questions' beyond the name.",
+        "Once a note chart is loaded, the app can start a timed practice session that scrolls notes from top to bottom (falling piano roll).",
+        "If no note chart is loaded, the app clearly indicates that a chart is needed for the piano-roll visualization (English), while still allowing YouTube playback."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement a falling piano-roll visualization (top-to-bottom) synced to the loaded note chart timeline, with lanes/columns representing keys and notes moving downward toward a hit line/target zone.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "it should piano roll from up to down like it is coming up to down the tunes."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Notes visibly travel from the top of the roll down toward a target line at a steady frame rate.",
+        "The roll layout is readable (distinct note blocks, lanes, and a hit line).",
+        "Start/pause/stop controls affect the piano-roll playback timing."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Detect the user's physical computer keyboard key presses during practice, map them to the corresponding piano-roll lanes/keys, and show an immediate tick/check mark in the UI when the pressed key matches the current expected note at the hit line within an allowed timing window.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "When I press the key which the tune tells in my keyboard, it should show the correct tick mark in the app"
+        ]
+      },
+      "acceptanceCriteria": [
+        "During practice, the app listens to keydown events and maps them to defined practice keys (documented in the UI, in English).",
+        "When the correct key is pressed for an active note near the hit line (within a defined timing tolerance), a visible tick/check mark appears and the note is marked as hit.",
+        "Incorrect keys do not produce a tick/check mark and are visually indicated as incorrect or ignored (consistent behavior, no crashes)."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Persist the user's name (and optionally their most recent practice configuration like last YouTube URL and last imported chart filename) in the Internet Computer backend canister so it is available when the user returns, without collecting any other personal data.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "It should ask only the name of the person who is using this app."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend exposes methods to save and load the user's profile containing at least the name.",
+        "Frontend loads the saved name on app start and does not ask for it again if already saved (unless the user explicitly chooses to change it).",
+        "No other personal fields (email, age, phone, etc.) are required or requested."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Ensure the app is free to use by not implementing any paid access, subscriptions, payments, or paywalls.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "And it should be free."
+        ]
+      },
+      "acceptanceCriteria": [
+        "There are no payment flows, pricing pages, subscription gates, or disabled features requiring payment.",
+        "All core features (name entry, YouTube selection, chart import, piano roll, key feedback) are accessible without any payment."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Apply a coherent visual theme across the app (colors, typography, spacing, and components) suitable for a music-learning tool, distinct and consistent (avoid blue/purple as primary colors).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "UI has a consistent theme across screens (onboarding, YouTube selection, practice).",
+        "Primary color palette is not blue/purple-dominant.",
+        "Typography and spacing feel intentional and consistent."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single Motoko actor (no additional backend services).",
+    "Do not modify files under frontend immutablePaths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui); only compose and use them.",
+    "User-facing text must be in English.",
+    "Do not implement third-party authentication beyond Internet Identity (if authentication is added/used)."
+  ],
+  "nonGoals": [
+    "Automatic extraction of note charts (MIDI/piano-roll) from arbitrary YouTube audio.",
+    "Real-time multiplayer or chat features.",
+    "Paid plans, subscriptions, or any payment integrations."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimalist piano/keyboard app logo (app-logo.dim_512x512.png)",
+      "Abstract music practice background with subtle falling-note motif (practice-bg.dim_1920x1080.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

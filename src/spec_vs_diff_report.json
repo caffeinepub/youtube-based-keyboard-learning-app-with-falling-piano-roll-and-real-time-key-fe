@@ -1,0 +1,86 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-08T09:07:59.009Z",
+  "summary": "Most core frontend features for YouTube URL input + embed, chart import (MIDI/JSON), falling piano roll with transport controls, and keyboard hit/miss feedback appear implemented. However, the onboarding flow requires Internet Identity login before name entry (adds an extra required step vs REQ-1), backend “persistence” is implemented as an in-memory Map (not durable across upgrades/restarts) and is gated by an unrequested authorization system, and the required image assets are not present in the diff.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "On first app load (new session), the only required user input is a name field and a continue/start button, then go directly to practice without other steps.",
+      "reason": "The app shows a login screen (Internet Identity) before presenting the name field; this adds an additional required step beyond entering a name.",
+      "evidence": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/layout/AppShell.tsx"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "requirement": "Persist the user's name (and optionally last YouTube URL / last chart filename) in the backend so it is available when the user returns.",
+      "reason": "Backend stores profiles in a non-stable in-memory Map (`let userProfiles = Map.empty...`), with no stable storage shown; this does not demonstrate persistence across canister upgrades/redeploys.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "requirement": "Provide required image assets: app-logo.dim_512x512.png and practice-bg.dim_1920x1080.png.",
+      "reason": "No image files are shown in the added/modified file list.",
+      "evidence": []
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Authorization / access-control system with admin token initialization and permission checks around profile APIs.",
+      "reason": "Not requested by the BuildRequest; REQ-6 only asked for saving/loading the profile, not role-based authorization, admin permissions, or secret token initialization.",
+      "evidence": [
+        "backend/main.mo",
+        "frontend/src/hooks/useActor.ts"
+      ]
+    },
+    {
+      "description": "User account dropdown UI with \"Change Name\" and \"Logout\" actions.",
+      "reason": "Not requested; the BuildRequest only specifies minimal onboarding (name) and practice flow features.",
+      "evidence": [
+        "frontend/src/components/layout/AppShell.tsx"
+      ]
+    },
+    {
+      "description": "Footer attribution link and heart symbol (\"Built with ❤️ using caffeine.ai\").",
+      "reason": "Not requested by any requirement; also introduces extra user-facing content unrelated to the app goals.",
+      "evidence": [
+        "frontend/src/components/layout/AppShell.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.78,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/chart/ChartImporter.tsx",
+    "frontend/src/components/feedback/HitFeedback.tsx",
+    "frontend/src/components/layout/AppShell.tsx",
+    "frontend/src/components/pianoroll/PianoRoll.tsx",
+    "frontend/src/components/pianoroll/TransportControls.tsx",
+    "frontend/src/components/profile/NameOnboarding.tsx",
+    "frontend/src/components/youtube/YouTubeEmbed.tsx",
+    "frontend/src/components/youtube/YouTubePicker.tsx",
+    "frontend/src/features/practice/PracticeView.tsx",
+    "frontend/src/features/practice/useHitDetection.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/hooks/useKeyboardInput.ts",
+    "frontend/src/hooks/usePracticeTransport.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
+    "frontend/src/main.tsx",
+    "frontend/src/types/noteChart.ts",
+    "frontend/src/utils/chartParsers.ts",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/src/utils/youtube.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}
